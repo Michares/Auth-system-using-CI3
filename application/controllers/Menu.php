@@ -3,6 +3,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Menu extends CI_Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+        is_logged_in();
+    }
+
     public function index()
     {
         $data['title'] = 'Menu Management';
@@ -29,7 +35,6 @@ class Menu extends CI_Controller
     }
 
     public function delete($id){
-        $id = $id ;
         $this->db->where('id', $id);
         $this->db->delete('user_menu');
         $this->session->set_flashdata('message', 
@@ -46,7 +51,7 @@ class Menu extends CI_Controller
         $data['menu'] = $this->db->get('user_menu')->result_array();
 
         $this->form_validation->set_rules('menu', 'Menu', 'required');
-        
+
         if ($this->form_validation->run() == false) {
             $this->load->view('templates/header', $data);
             $this->load->view('templates/sidebar', $data);
@@ -55,7 +60,7 @@ class Menu extends CI_Controller
             $this->load->view('templates/footer');
         } else {
             $this->db->insert('user_menu', ['menu' => $this->input->post('menu')]);
-            $this->session->set_flashdata('message', 
+            $this->session->set_flashdata('message',
                     '<div class="alert alert-success" role="alert">
                     New Menu Added!!
                     </div>');
